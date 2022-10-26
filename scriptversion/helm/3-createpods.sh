@@ -14,6 +14,7 @@
 #  ============LICENSE_END=================================================
 #
 
+SHELL_FOLDER=$(cd "$(dirname "$0")";pwd)
 cd ${SHELL_FOLDER}/dmaap-mr/
 helm package .
 helm install dmaap-mr dmaap-mr-0.1.0.tgz --namespace nonrtric --create-namespace --wait
