@@ -18,10 +18,6 @@ SHELL_FOLDER=$(cd "$(dirname "$0")";pwd)
 cd ${SHELL_FOLDER}
 helm uninstall dmaap-mr message-generator oru-app sdnr-simulator -n nonrtric
 
-# be careful if other stopped containers are on the same system
-docker stop $(docker ps -aq)
-docker system prune -f
-
 # build o-ru application image
 cd ${SHELL_FOLDER}/../app/
 docker build -t oru-app .
@@ -34,25 +30,6 @@ docker build -f Dockerfile-sdnr-sim -t sdnr-simulator .
 docker build -f Dockerfile-message-generator -t message-generator .
 
 # build dmaap-mr sim
-cd ${SHELL_FOLDER}/../../../../mrstub/
+cd ${SHELL_FOLDER}/../mrstub/
 docker build -t mrstub .
 
-# build dmapp-mr helm chart & install chart
-cd ${SHELL_FOLDER}/dmaap-mr/
-helm package .
-helm install dmaap-mr dmaap-mr-0.1.0.tgz --namespace nonrtric --create-namespace --wait
-
-# build dmapp-mr helm chart & install chart
-cd ${SHELL_FOLDER}/message-generator/
-helm package .
-helm install message-generator message-generator-0.1.0.tgz --namespace nonrtric --create-namespace --wait
-
-# build dmapp-mr helm chart & install chart
-cd ${SHELL_FOLDER}/oru-app/
-helm package .
-helm install oru-app oru-app-0.1.0.tgz --namespace nonrtric --create-namespace --wait
-
-# build dmapp-mr helm chart & install chart
-cd ${SHELL_FOLDER}/sdnr-simulator/
-helm package .
-helm install sdnr-simulator sdnr-simulator-0.1.0.tgz --namespace nonrtric --create-namespace --wait
